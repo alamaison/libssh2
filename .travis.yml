@@ -1,4 +1,4 @@
-# Copyright (c) 2014 Alexander Lamaison <alexander.lamaison@gmail.com>
+# Copyright (c) 2014, 2015 Alexander Lamaison <alexander.lamaison@gmail.com>
 #
 # Redistribution and use in source and binary forms,
 # with or without modification, are permitted provided
@@ -39,6 +39,8 @@ compiler:
   - gcc
   - clang
 
+sudo: false
+
 env:
   matrix:
    - ADDRESS_SIZE=64 CRYPTO_BACKEND=OpenSSL BUILD_SHARED_LIBS=OFF ENABLE_ZLIB_COMPRESSION=OFF
@@ -58,13 +60,24 @@ env:
    - ADDRESS_SIZE=32 CRYPTO_BACKEND=Libgcrypt BUILD_SHARED_LIBS=OFF ENABLE_ZLIB_COMPRESSION=ON
    - ADDRESS_SIZE=32 CRYPTO_BACKEND=Libgcrypt BUILD_SHARED_LIBS=ON ENABLE_ZLIB_COMPRESSION=ON
 
+addons:
+  apt:
+    packages:
+    - libgcrypt11-dev
+    - libgcrypt11-dev:i386
+    - libssl-dev
+    - libssl-dev:i386
+    - zlib1g-dev
+    - zlib1g-dev:i386
+    - linux-libc-dev
+    - linux-libc-dev:i386
+    - gcc-multilib
+
 before_install:
-  - sudo add-apt-repository --yes ppa:kalakris/cmake
-  - sudo apt-get update
-  - sudo apt-get -y install cmake
-  - if [ $ADDRESS_SIZE = '64' ]; then sudo apt-get install -y libgcrypt11-dev libssl-dev zlib1g-dev; fi
-  - if [ $ADDRESS_SIZE = '32' ]; then sudo apt-get install -y linux-libc-dev linux-libc-dev:i386; fi
-  - if [ $ADDRESS_SIZE = '32' ]; then sudo apt-get install -y gcc-multilib libgcrypt11-dev:i386 libssl-dev:i386 zlib1g-dev:i386; fi
+  # Install minimum CMake
+  - wget --quiet -O cmake.tar.gz http://www.cmake.org/files/v2.8/cmake-2.8.11-Linux-i386.tar.gz
+  - mkdir cmake-install && tar --strip-components=1 -C cmake-install -xzf cmake.tar.gz
+  - export PATH=${PWD}/cmake-install/bin:${PATH}
   - if [ $ADDRESS_SIZE = '32' ]; then export TOOLCHAIN_OPTION="-DCMAKE_TOOLCHAIN_FILE=../cmake/Toolchain-Linux-32.cmake"; fi
 
 install:
