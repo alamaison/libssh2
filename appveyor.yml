@@ -69,7 +69,7 @@ configuration:
   - Release
 
 matrix:
-  fast-finish: true
+  fast_finish: true
   allow_failures:
     - GENERATOR: "Visual Studio 9 2008"
       platform: x64
