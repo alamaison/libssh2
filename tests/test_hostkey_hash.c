@@ -37,8 +37,10 @@ int test(LIBSSH2_SESSION *session)
 {
     char buf[BUFSIZ];
 
-    const char *md5_hash =
-        libssh2_hostkey_hash(session, LIBSSH2_HOSTKEY_HASH_MD5);
+    const char *md5_hash;
+    const char *sha1_hash;
+
+    md5_hash = libssh2_hostkey_hash(session, LIBSSH2_HOSTKEY_HASH_MD5);
     if (md5_hash == NULL) {
         print_last_session_error(
             "libssh2_hostkey_hash(LIBSSH2_HOSTKEY_HASH_MD5)");
@@ -53,8 +55,7 @@ int test(LIBSSH2_SESSION *session)
         return 1;
     }
 
-    const char *sha1_hash =
-        libssh2_hostkey_hash(session, LIBSSH2_HOSTKEY_HASH_SHA1);
+    sha1_hash = libssh2_hostkey_hash(session, LIBSSH2_HOSTKEY_HASH_SHA1);
     if (sha1_hash == NULL) {
         print_last_session_error(
             "libssh2_hostkey_hash(LIBSSH2_HOSTKEY_HASH_SHA1)");
