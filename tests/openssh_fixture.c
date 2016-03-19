@@ -182,7 +182,8 @@ static int ip_address_from_container(char *container_id, char **ip_address_out)
         char command_buf[BUFSIZ];
         int rc = snprintf(
             command_buf, sizeof(command_buf),
-            "docker inspect --format \"{{ .NetworkSettings.IPAddress }}\" %s",
+            "docker inspect --format \"{{ index (index (index "
+            ".NetworkSettings.Ports \\\"22/tcp\\\") 0) \\\"HostIp\\\" }}\" %s",
             container_id);
         if (rc > -1 && rc < BUFSIZ) {
             return run_command(command_buf, ip_address_out);
@@ -273,7 +274,7 @@ static char *running_container_id = NULL;
 int start_openssh_fixture()
 {
     int ret;
-#ifdef WIN32
+#if HAVE_WINSOCK2_H
     WSADATA wsadata;
 
     ret = WSAStartup(MAKEWORD(2, 0), &wsadata);
