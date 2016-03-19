@@ -75,11 +75,12 @@ target_include_directories(session_fixture PRIVATE "${CMAKE_CURRENT_BINARY_DIR}"
 
 add_library(runner STATIC runner.c)
 target_link_libraries(runner session_fixture)
-target_include_directories(runner PRIVATE)
+target_include_directories(runner PRIVATE "${CMAKE_CURRENT_BINARY_DIR}")
 
 foreach(test ${TESTS})
   add_executable(test_${test} test_${test}.c)
   target_link_libraries(test_${test} libssh2 runner ${LIBRARIES})
+  target_include_directories(test_${test} PRIVATE "${CMAKE_CURRENT_BINARY_DIR}")
   list(APPEND TEST_TARGETS test_${test})
 
   add_test(
