@@ -15,6 +15,8 @@ static void kbd_callback(const char *name, int name_len,
                          void **abstract)
 {
     int i;
+    (void)abstract;
+
     fprintf(stdout, "Kb-int name: %.*s\n", name_len, name);
     fprintf(stdout, "Kb-int instruction: %.*s\n", instruction_len, instruction);
     for (i = 0; i < num_prompts; ++i) {

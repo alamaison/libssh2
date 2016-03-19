@@ -152,7 +152,7 @@ static int ip_address_from_container(char *container_id, char **ip_address_out)
         // times with exponential backoff if it fails
         int attempt_no = 0;
         int wait_time = 500;
-        while (1) {
+        for (;;) {
             char command_buf[BUFSIZ];
             int rc = snprintf(command_buf, sizeof(command_buf),
                               "docker-machine ip %s", active_docker_machine);
@@ -169,7 +169,10 @@ static int ip_address_from_container(char *container_id, char **ip_address_out)
             }
             else {
 #ifdef WIN32
+#pragma warning(push)
+#pragma warning(disable : 4996)
                 _sleep(wait_time);
+#pragma warning(pop)
 #else
                 sleep(wait_time);
 #endif
@@ -226,7 +229,7 @@ static int open_socket_to_container(char *container_id)
                     struct sockaddr_in sin;
 
                     sin.sin_family = AF_INET;
-                    sin.sin_port = htons(strtol(port_string, NULL, 0));
+                    sin.sin_port = htons((short)strtol(port_string, NULL, 0));
                     sin.sin_addr.s_addr = hostaddr;
 
                     if (connect(sock, (struct sockaddr *)(&sin),
