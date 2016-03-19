@@ -274,7 +274,7 @@ static char *running_container_id = NULL;
 int start_openssh_fixture()
 {
     int ret;
-#if HAVE_WINSOCK2_H
+#ifdef HAVE_WINSOCK2_H
     WSADATA wsadata;
 
     ret = WSAStartup(MAKEWORD(2, 0), &wsadata);
